@@ -1,0 +1,25 @@
+#!/usr/bin/env ruby
+
+require 'thor'
+
+class CLI < Thor
+  desc "new_post TITLE", "Create a new post"
+  def new_post title
+    timestamp = Time.now
+    sanitized_title = sanitize title
+    filename = timestamp.strftime("%Y-%m-%d-#{sanitized_title}.md")
+    path = File.expand_path File.join(File.dirname(__FILE__), '..', '_posts', filename)
+    File.write path, "---\nlayout: default\ntitle: #{title}\n---\n"
+  end
+
+  private
+  def sanitize title
+    t = title.gsub(/[^a-z0-9\-_]+/i, '-') 
+    t.gsub!(/\\-{2,}/, '-')
+    t.gsub!(/^\\-|\\-$/i, '')
+
+    t.downcase
+  end
+end
+
+CLI.start
