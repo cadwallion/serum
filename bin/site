@@ -10,7 +10,11 @@ class CLI < Thor
     sanitized_title = sanitize title
     filename = timestamp.strftime("%Y-%m-%d-#{sanitized_title}.md")
     path = File.expand_path File.join(File.dirname(__FILE__), '..', '_posts', filename)
-    File.write path, "---\nlayout: #{options[:layout]}\ntitle: #{title}\n---\n"
+    if File.exists? path
+      puts "Post already exists, doing nothing"
+    else
+      File.write path, "---\nlayout: #{options[:layout]}\ntitle: #{title}\n---\n"
+    end
   end
 
   private
