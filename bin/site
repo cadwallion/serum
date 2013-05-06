@@ -4,12 +4,13 @@ require 'thor'
 
 class CLI < Thor
   desc "new_post TITLE", "Create a new post"
+  option :layout, type: :string, default: 'default'
   def new_post title
     timestamp = Time.now
     sanitized_title = sanitize title
     filename = timestamp.strftime("%Y-%m-%d-#{sanitized_title}.md")
     path = File.expand_path File.join(File.dirname(__FILE__), '..', '_posts', filename)
-    File.write path, "---\nlayout: default\ntitle: #{title}\n---\n"
+    File.write path, "---\nlayout: #{options[:layout]}\ntitle: #{title}\n---\n"
   end
 
   private
